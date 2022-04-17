@@ -35,7 +35,7 @@ public:
         vector< pair< pair<string,string> ,int> > arr;
         pair< pair< string,string > , int> max;
 
-        StaticHeap(unsigned sz,pair pair< pair< string,string > , int> mx){
+        StaticHeap(unsigned sz,pair< pair< string,string > , int> mx){
             size=0;
             arr=vector< pair< pair< string,string > , int> >(sz,mx);
             max=mx;
@@ -104,7 +104,7 @@ public:
             h.push(make_pair(kvp,i));
         }
         int j=-1;
-        int lastkey=INT16_MAX;
+        string lastkey="zzzzzzzzzzzzzzzzzzzzzzzzzz";
         unsigned lastk=INT16_MIN;
         while(h.size!=0){
             auto val_run_pair=h.pop();
@@ -184,16 +184,32 @@ public:
         return _activerun==0;
     }
 
-    int lookup(int &key,bool &found){
+    int compute_hash(string s) {
+        const int p = 31;
+        const int m = 1e9 + 9;
+        long long hash_value = 0;
+        long long p_pow = 1;
+        for (char c : s) {
+            if(c>=97)
+                (hash_value += ( (c - 'a' + 1) * p_pow) % m)%=m;
+            else if(c>=65)
+                (hash_value += ((c - 'A' + 1) * p_pow) % m)%=m;
+            p_pow = (p_pow * p) % m;
+        }
+        return hash_value;
+    }
+
+    string lookup(string key,bool &found){
         int maxruntosearch=levelfull()?_numruns-1:_activerun-1;
         for(int i=maxruntosearch;i>=0;i--){
-            if(runs[i]->maxkey==INT16_MIN || key<runs[i]->minkey || key>runs[i]->maxkey || !runs[i]->bf.maycontain(&key,sizeof(int)))
+            int num=compute_hash(key);
+            if(runs[i]->maxkey=="A" || key<runs[i]->minkey || key>runs[i]->maxkey || !runs[i]->bf.maycontain(&num,sizeof(int)))
                 continue;
-            int lookupres=runs[i]->lookup(key,found);
+            string lookupres=runs[i]->lookup(key,found);
             if(found)
                 return lookupres;
         }
-        return (int)NULL;
+        return "NULL";
     }
 
     long num_elements(){

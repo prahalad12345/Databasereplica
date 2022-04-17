@@ -27,28 +27,6 @@ struct LSMParams {
     double merge_fraction;
 };
 
-void loadfrombin(LSM &lsm,string filename){
-    FILE *intarrayfile;
-    long size;
-    intarrayfile=fopen(filename.c_str(),"rb");
-    fseek(intarrayfile,0,SEEK_END);
-    size=ftell(intarrayfile);
-    int newarray[size/sizeof(int)];
-    rewind(intarrayfile);
-    size_t num;
-    num=fread(newarray,sizeof(int),size/sizeof(int)+1,intarrayfile);
-    assert(num==size/sizeof(int));
-    int *ptr=newarray;
-    int read=0;
-    int k,v;
-    while(read+1<num){
-        k=*ptr;
-        v=*(ptr+1);
-        lsm.insert_key(k,v);
-        ptr+=2;
-        read+=2;   
-    }
-}
 
 void queryline(LSM &lsm,string &line,vector<string> &strings){
     //cout<<1<<endl;
@@ -98,11 +76,6 @@ void queryline(LSM &lsm,string &line,vector<string> &strings){
         case 'd':{
             string dk=strings[1];
             lsm.delete_key(dk);
-        }
-        break;
-        case 'l':{
-            string ls=strings[1];
-            loadfrombin(lsm,ls);
         }
         break;
         case 's':{

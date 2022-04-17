@@ -177,12 +177,16 @@ class Skiplist
         if(key1>max || key2<min){
             return (vector< pair<string,string> >){};
         }
+        cout<<2<<endl;
         vector< pair<string,string> > vec=vector< pair<string,string> > ();
         Skiplist_Node *node=plisthead->forward[1];
+        cout<<3<<endl;
         while(node->key<key1){
             node=node->forward[1];
         }
+        cout<<4<<endl;
         while(node->key<key2){
+            cout<<node->key<<" "<<node->value<<endl;
             vec.push_back(make_pair(node->key,node->value));
             node=node->forward[1];
         }

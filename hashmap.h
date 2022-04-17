@@ -1,3 +1,5 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
 #include "MurmurHash.h"
 #include <stdlib.h>
 #include <cstdint>
@@ -5,21 +7,19 @@
 #include <iostream>
 #include <array>
 
-#ifndef HASHMAP_H
-#define HASHMAP_H
 
 using namespace std;
 
 class Hashtable{
 private:
-    pair<int,int> *table;
+    pair<int,string> *table;
 public:
     unsigned long _size;
     unsigned long _elts;
-    pair<int,int> empty=make_pair(INT_MIN,INT_MIN);
+    pair<int,string> empty=make_pair(INT_MIN,"NULL");
 
     Hashtable(unsigned long size):_size(2*size),_elts(0){
-        table=new pair<int,int>[_size]();
+        table=new pair<int,string>[_size]();
         fill(table,table+_size,empty);
     }
 
@@ -35,7 +35,7 @@ public:
 
     void resize(){
         _size*=2;
-        auto newtable=new pair<int,int>[_size]();
+        auto newtable=new pair<int,string>[_size]();
         fill(newtable,newtable+_size,empty);
 
         for(unsigned long i=0;i<_size/2;i++){
@@ -52,7 +52,7 @@ public:
         table=newtable;
     }
 
-    bool get(int &key,int &value){
+    bool get(int &key,string value){
         unsigned long hashvalue=hashfunc(key);
         for(int i=0;;i++){
             if(table[(hashvalue+i)%_size]==empty){
@@ -66,7 +66,7 @@ public:
         return false;
     }
 
-    void put(int &key,int &value){
+    void put(int &key,string value){
         if(_elts*2>_size){
             resize();
         }
@@ -85,7 +85,7 @@ public:
         }
     }
 
-    int putifempty(int &key,int &value){
+    string putifempty(int &key,string value){
         if(_elts*2>_size)
             resize();
         unsigned long hashvalue=hashfunc(key);
@@ -94,7 +94,7 @@ public:
                 table[(hashvalue+i)%_size].first=key;
                 table[(hashvalue+i)%_size].second=value;
                 ++_elts;
-                return (int)NULL;
+                return "NULL";
             }
             else if(table[(hashvalue+i)%_size].first==key){
                 return table[(hashvalue+i)%_size].second=value;
@@ -103,4 +103,4 @@ public:
     }
 };
 
-#endif123
+#endif

@@ -13,7 +13,7 @@ using namespace std;
 
 class Bloomfilter{
     private:
-       uint8_t m_numHashes;
+        uint8_t m_numHashes;
         vector<bool> m_bits;
     public:
     Bloomfilter(int n,double fp){

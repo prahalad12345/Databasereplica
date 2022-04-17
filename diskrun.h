@@ -35,7 +35,7 @@ public:
     unsigned _runid;
     double _bf_fp;
 
-    string minkey = "a";
+    string minkey = "A";
     string maxkey = "zzzzzzzzzzzzzzzzzzzzzzzzz";
 
     Diskrun(long capacity,int pagesize,int level,int runid,double bf_fp):_capacity(capacity),_level(level),_imaxfp(0),pagesize(pagesize),_runid(runid),_bf_fp(bf_fp),bf(capacity,bf_fp){
@@ -108,8 +108,9 @@ public:
     void constructindex(){
         fencepointer.reserve(_capacity/pagesize);
         _imaxfp=-1;
-        int num=compute_hash(map[j].first)
+        
         for(int j=0;j<_capacity;j++){
+            int num= compute_hash(map[j].first);
             if(j%pagesize==0){
                 bf.add((int*)&num,sizeof(int));
                 _imaxfp++;
